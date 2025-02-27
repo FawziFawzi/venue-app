@@ -39,10 +39,11 @@ Response:
 ```http
   "message": "User Registered Successfully!",
     "user": {
-        "id": 12,
-        "name": "ahmed3",
-        "email": "ahmed3@email.com"
-    }
+        "id": 18,
+        "name": "ahmed2",
+        "email": "ahmed2@email.com"
+    },
+    "token": "4|7abWtGOKgi77FLhuE7POpBZqfpsQTlyzczru7EiYe91eaf04"
 ```
 
 #### Login a  user
