@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('venues', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique()->nullable();
-            $table->string('location')->nullable();
-            $table->unsignedInteger('capacity')->nullable();
+            $table->string('name')->unique();
+            $table->string('location');
+            $table->unsignedInteger('capacity');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

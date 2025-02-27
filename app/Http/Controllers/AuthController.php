@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserResourcs;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -26,11 +26,14 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-
+        // Creating a token
+        $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
-            'message' => 'User Registered Successfully!'
-        ], 201);
+            'message' => 'User Registered Successfully!',
+            'user' => new UserResource($user),
+            'token' => $token,
+        ], 200);
     }
 
 
@@ -49,7 +52,7 @@ class AuthController extends Controller
         //check the credentials
         if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
+                'error' => ['The provided credentials are incorrect.'],
             ]);
         }
 
@@ -59,9 +62,9 @@ class AuthController extends Controller
         //Return token with accepted response
         return response()->json([
             'message' => 'User Login Successfully!',
-            'user' => new UserResourcs($user),
+            'user' => new UserResource($user),
             'token' => $token,
-        ],202);
+        ],200);
 
     }
 }

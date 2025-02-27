@@ -24,10 +24,7 @@ class VenueController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(VenueRequest $request)
-    {
-        //Validating credentials
-        $request->validated();
-
+    {;
         //Storing the venue in database
         $venue = Venue::create([
             'name' => $request->name,
@@ -39,24 +36,21 @@ class VenueController extends Controller
         return response()->json([
             'message' => 'Venue created successfully',
             'venue' => new VenueResource($venue)
-        ], 201);
+        ], 200);
     }
-
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(VenueRequest $request, string $id)
+    public function update(VenueRequest $request, int $id)
     {
-        //Validating credentials
-        $credentials = $request->validated();
-
+        // Retrieve the venue
         $venue = Venue::findOrFail($id);
 
         //Updating
-        $venue->name = $credentials['name'];
-        $venue->location = $credentials['location'];
-        $venue->capacity = $credentials['capacity'];
+        $venue->name = $request->name;
+        $venue->location = $request->location;
+        $venue->capacity = $request->capacity;
         $venue->save();
 
         return response()->json([
@@ -69,14 +63,13 @@ class VenueController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
-
         //Deleting Venue
-        Venue::destroy($id);
-
+        $venue = Venue::find($id);
+        $venue->delete();
         return response()->json([
             'message' => 'Venue deleted successfully',
-        ],204);
+        ],200);
     }
 }

@@ -70,13 +70,13 @@ class VenueManagementTest extends TestCase
             // Sending  a POST request to the endpoint
         $response = $this->postJson('/api/venues', $venueData);
 
-        //Assert the response status is 201 ( Created )
-        $response->assertStatus(201);
+        //Assert the response status is 200 ( OK )
+        $response->assertStatus(200);
 
         //Assert the message response
         $this->assertDatabaseHas('venues', [
-            'name' => 'Venue 1',
-            'location' => 'galaa st 2 ns',
+            'name' => $venueData['name'],
+            'location' => $venueData['location'],
         ]);
     }
 
@@ -128,8 +128,9 @@ class VenueManagementTest extends TestCase
 
         //Assert the message response
         $this->assertDatabaseHas('venues', [
-            'name' => 'Venue new',
-            'location' => 'new location',
+            'name' => $updatedData['name'],
+            'location' => $updatedData['location'],
+            'capacity' => $updatedData['capacity'],
         ]);
     }
 
@@ -194,12 +195,11 @@ class VenueManagementTest extends TestCase
 
         // Sending  a DELETE request to the endpoint
         $response = $this->delete('/api/venues/'.$venue->id);
-        //Assert the response status is 422 ( No content )
-        $response->assertStatus(204);
-
-        // Assert the venue doesn't exist anymore in the database
-        $this->assertDatabaseMissing('venues', [
-            'name' => 'Venue to delete'
+        //Assert the response status is 200 ( OK )
+        $response->assertStatus(200);
+        //Assert the venue is deleted
+        $this->assertSoftDeleted('venues', [
+            'name' => $venue->name,
         ]);
     }
 }

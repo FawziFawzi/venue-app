@@ -16,9 +16,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 //User Authentication
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
@@ -27,7 +24,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/venues', [VenueController::class, 'index'])->name('venues.index');
     Route::post('/venues', [VenueController::class, 'store'])->name('venues.store');
-    Route::PUT('/venues/{venue}', [VenueController::class, 'update'])->name('venues.update');
-    Route::DELETE('/venues/{venue}', [VenueController::class, 'destroy'])->name('venues.destroy');
+    Route::PUT('/venues/{id}', [VenueController::class, 'update'])->name('venues.update');
+    Route::DELETE('/venues/{id}', [VenueController::class, 'destroy'])->name('venues.destroy');
 });
 
