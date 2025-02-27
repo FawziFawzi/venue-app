@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResourcs;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -9,9 +10,10 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    // Register Method
     public function register(Request $request)
     {
-        //Validating user's inputs
+        //// Validating user's inputs ////
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users|max:255',
@@ -25,14 +27,14 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
-            'message' => 'User Registered Successfully!',
-            'token' => $token,
+            'message' => 'User Registered Successfully!'
         ], 201);
     }
 
+
+    //// Login Method ////
     public function Login(Request $request)
     {
         //Validating credentials
@@ -57,6 +59,7 @@ class AuthController extends Controller
         //Return token with accepted response
         return response()->json([
             'message' => 'User Login Successfully!',
+            'user' => new UserResourcs($user),
             'token' => $token,
         ],202);
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\VenueRequest;
 use App\Http\Resources\VenueResource;
 use App\Models\Venue;
 use Illuminate\Http\Request;
@@ -13,21 +14,19 @@ class VenueController extends Controller
      */
     public function index()
     {
-        $venues = Venue::all();
-        return venueResource::collection($venues);
+        $venues = Venue::paginate(5);
+        return response()->json([
+            'venues' => VenueResource::collection($venues)
+        ],200);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(VenueRequest $request)
     {
         //Validating credentials
-        $request->validate([
-            'name' => 'required|string|max:255|unique:venues',
-            'location' => 'required|string|max:255',
-            'capacity' => 'required|integer|min:0',
-        ]);
+        $request->validated();
 
         //Storing the venue in database
         $venue = Venue::create([
@@ -47,14 +46,10 @@ class VenueController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(VenueRequest $request, string $id)
     {
         //Validating credentials
-        $credentials = $request->validate([
-            'name' => 'required|string|max:255|unique:venues',
-            'location' => 'required|string|max:255',
-            'capacity' => 'required|integer|min:0',
-        ]);
+        $credentials = $request->validated();
 
         $venue = Venue::findOrFail($id);
 
@@ -67,7 +62,7 @@ class VenueController extends Controller
         return response()->json([
             'message' => 'Venue updated successfully',
             'venue' => new VenueResource($venue)
-        ]);
+        ],200);
 
     }
 
@@ -82,6 +77,6 @@ class VenueController extends Controller
 
         return response()->json([
             'message' => 'Venue deleted successfully',
-        ]);
+        ],200);
     }
 }
