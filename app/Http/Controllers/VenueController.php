@@ -77,6 +77,6 @@ class VenueController extends Controller
 
         return response()->json([
             'message' => 'Venue deleted successfully',
-        ],200);
+        ],204);
     }
 }
